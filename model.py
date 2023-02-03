@@ -3,12 +3,15 @@ from tensorflow.keras.models import *
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import VGG16
 from data_and_label_processing import *
+from predict import *
+from sklearn.metrics import plot_roc_curve, auc
+
 
 def simple_linear_build(shape, class_no):
-    print(shape)
-    base_model_1 = VGG16(include_top=False, input_shape=(shape), classes=class_no)
+    # print(shape)
+    # base_model_1 = VGG16(include_top=False, input_shape=(shape), classes=class_no)
     model_1= Sequential()
-    model_1.add(base_model_1)
+    # model_1.add(base_model_1)
     model_1.add(Flatten())
     model_1.add(Dense(1024,activation=('relu'),input_dim=512))
     model_1.add(Dense(512,activation=('relu')))
@@ -46,7 +49,7 @@ def residual_block(x, downsample, filters, kernel_size = 3):
 
 
 def create_res_net(class_no):
-    inputs = Input(shape=(32, 32, 3))
+    inputs = Input(shape=(128, 32, 3))
     num_filters = 64
 
     t = BatchNormalization()(inputs)
@@ -71,19 +74,16 @@ def create_res_net(class_no):
 
     return model
 
-def train(data_path, universal_path, mode, class_no, epoch_no):
+def train(data_path, universal_path, class_no, epoch_no, class_used, run_number):
 
-    data, label = get_data_label_alltogether(data_path, universal_path, mode=mode)
-    (X_train, y_train), (X_test, y_test) = train_test_split_custom(data, label, 4)
+    data, label = get_data_label_alltogether(data_path, universal_path, class_used)
+    (X_train, y_train), (X_test, y_test) = train_test_split_custom(data, label, class_no)
 
-    model = create_res_net(4)
+    model = simple_linear_build((32, 32, 3), class_no)
     model.compile(optimizer="RMSProp", loss=tf.keras.losses.SparseCategoricalCrossentropy(), metrics=["acc"])
 
-    model.fit(X_train, y_train, epochs=epoch_no)
-
-    y_predict = model.predict(X_test)
-    # print(np.argmax(y_predict, axis=1), np.argmax(y_test, axis=1))
-    print("predict, test", np.argmax(y_predict, axis=1), y_test)
-    #print('Accuracy:' , np.sum(np.argmax(y_predict, axis=1)==np.argmax(y_test, axis=1))/len(X_test))
+    model.fit(X_train, y_train, epochs=epoch_no, batch_size = 8)
+    values, counts = np.unique(label, return_counts=True)
+    predict(X_test, y_test, model, class_used, run_number, counts)
 
     return model

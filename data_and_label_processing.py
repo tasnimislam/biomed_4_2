@@ -8,30 +8,36 @@ from image_processing import *
 def read_xlx_file(xlx_file):
     bld_summary = pd.read_excel(xlx_file, sheet_name=0, header=0, names=None, index_col=None, usecols=None)
     bld_summary['Blood_group'] = pd.Categorical(bld_summary['Blood_group'])
-    bld_summary['Blood_group'].replace(['A_pos', 'B_pos', 'O_pos', 'AB_pos'],
-                        [0, 1, 2, 3], inplace=True)
+    bld_summary['Blood_group'].replace(['A_pos', 'B_pos', 'O_pos', 'AB_pos', 'A_neg'],
+                        [0, 1, 2, 3, 4], inplace=True)
     print(bld_summary['Blood_group'].value_counts())
     return bld_summary
 
-def get_desired_image_label(index, xlx_data, universal_path, file_name = 'li.bmp'):
+def get_desired_image_label(index, xlx_data, universal_path):
     user_name = xlx_data.iloc[index, 0]
-    data_path = universal_path + '/' + user_name + '/' + file_name
-    data = image_preprocessing(data_path)
+    data = []
+    for f in ['ri.bmp', 'rt.bmp', 'lt.bmp', 'li.bmp']:
+        data_path = universal_path + '/' + user_name + '/' + f
+        data.append(image_preprocessing(data_path))
+    data = np.concatenate(data)
     bld_group = xlx_data.iloc[index, 1]
     return data, bld_group
 
 
-def get_data_label_alltogether(xlx_file, universal_path, mode = 'lt.bmp'):
+def get_data_label_alltogether(xlx_file, universal_path, class_used):
     xlx_data = read_xlx_file(xlx_file)
     data = []
     label = []
     for i in range(len(xlx_data)):
-        x, y = get_desired_image_label(i, xlx_data, universal_path, mode)
+        x, y = get_desired_image_label(i, xlx_data, universal_path)
+        if not y in class_used:
+            continue
         data.append(x)
         label.append(y)
 
     data = np.array(data)
     label = np.array(label)
+    print(f"Unique label used for this classification:{np.unique(label)}")
 
     return data, label
 
