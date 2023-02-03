@@ -18,7 +18,7 @@ def roc_curve_plot_custom(y_test, y_score, class_used, accuracy, run_number, cou
 
 def predict(X_test, y_test, model, class_used, run_number, counts):
     y_predict = model.predict(X_test)
-    print("predict, test", np.argmax(y_predict, axis=1), y_test)
-    accuracy = np.sum(np.argmax(y_predict, axis=1) == y_test) / len(X_test)
+    print("predict, test",  y_predict, y_test)
+    accuracy = np.sum(y_predict == y_test) / len(X_test)
     print('Accuracy:', accuracy)
-    roc_curve_plot_custom(y_test, np.argmax(y_predict, axis=1), class_used, accuracy, run_number, counts)
+    roc_curve_plot_custom(y_test, y_predict, class_used, accuracy, run_number, counts)

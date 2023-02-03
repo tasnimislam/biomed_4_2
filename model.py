@@ -6,6 +6,8 @@ from data_and_label_processing import *
 from predict import *
 from sklearn.metrics import plot_roc_curve, auc
 
+from sklearn.ensemble import RandomForestClassifier
+
 
 def simple_linear_build(shape, class_no):
     # print(shape)
@@ -87,3 +89,14 @@ def train(data_path, universal_path, class_no, epoch_no, class_used, run_number)
     predict(X_test, y_test, model, class_used, run_number, counts)
 
     return model
+
+def train_sklearn(data_path, universal_path, class_no, epoch_no, class_used, run_number):
+    data, label = get_data_label_alltogether(data_path, universal_path, class_used)
+    (X_train, y_train), (X_test, y_test) = train_test_split_custom(data, label, class_no)
+    print(X_train.shape)
+    X_train = np.reshape(X_train, (-1, 4*288*256))
+    X_test = np.reshape(X_test, (-1, 4*288*256))
+
+    model = RandomForestClassifier().fit(X_train, y_train)
+    values, counts = np.unique(label, return_counts=True)
+    predict(X_test, y_test, model, class_used, run_number, counts)

@@ -12,11 +12,11 @@ from change_file_name import  *
 # change_file_names(folder_name, file_name_old, file_name_new)
 
 
-# # # Image processing
-# file_name = 'D:/4-2/biomedical project/Fingerprint/1711046(b+)/ri.bmp'
-# image = image_preprocessing(file_name)
-# # plt.imshow(image, cmap = 'binary')
-# # plt.show()
+# Image processing
+file_name = 'D:/4-2/biomedical project/Fingerprint/1711046(b+)/ri.bmp'
+image = image_preprocessing(file_name)
+# plt.imshow(image, cmap = 'binary')
+# plt.show()
 #
 # # # pandas data processing
 # # data_path = 'D:/4-2/biomedical project/sheet_name_blood_group.xlsx'
@@ -36,7 +36,7 @@ from change_file_name import  *
 # # print(len(X_train), len(X_test))
 # # print(y_train.shape)
 #
-# train
+train
 data_path = 'D:/4-2/biomedical project/sheet_name_blood_group(all).xlsx'
 universal_path = 'D:/4-2/biomedical project/Fingerprint'
 class_no = 5
@@ -44,4 +44,21 @@ epoch_no = 50
 class_used = [2, 0]
 for i in range(10):
     run_number = i
-    model = train(data_path, universal_path,class_no, epoch_no, class_used, run_number)
+    model = train_sklearn(data_path, universal_path,class_no, epoch_no, class_used, run_number)
+
+
+# Image feature
+# skel, mask = get_skel_mask(image)
+# (minutiaeTerm, minutiaeBif) = getTerminationBifurcation(skel, mask);
+# FeaturesTerm, FeaturesBif = extractMinutiaeFeatures(skel, minutiaeTerm, minutiaeBif)
+# BifLabel = skimage.measure.label(minutiaeBif, connectivity=1);
+# TermLabel = skimage.measure.label(minutiaeTerm, connectivity=1);
+# ShowResults(skel, TermLabel, BifLabel)
+#
+# print(f'FeaturesTerm shape {np.array(FeaturesTerm).shape}')
+# print(f'FeaturesBif shape {np.array(FeaturesBif).shape}')
+# print(f'BifLabel shape {np.array(BifLabel).shape}')
+# print(f'TermLabel shape {np.array(TermLabel).shape}')
+#
+# plt.imshow(TermLabel)
+# plt.savefig('D:/4-2/biomedical project/feature detailed/TermLabel.png')
