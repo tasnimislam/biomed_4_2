@@ -16,10 +16,12 @@ def read_xlx_file(xlx_file):
 def get_desired_image_label(index, xlx_data, universal_path):
     user_name = xlx_data.iloc[index, 0]
     data = []
-    for f in ['ri.bmp', 'rt.bmp', 'lt.bmp', 'li.bmp']:
+    for f in ['ri.bmp']: #, 'rt.bmp', 'lt.bmp', 'li.bmp']:
         data_path = universal_path + '/' + user_name + '/' + f
-        data.append(image_preprocessing(data_path))
-    data = np.concatenate(data)
+        _, x = image_preprocessing_new(data_path)
+        data.append(x)
+    #data = np.concatenate(data)
+    data = np.squeeze(data)
     bld_group = xlx_data.iloc[index, 1]
     return data, bld_group
 
