@@ -65,3 +65,4 @@ plt.plot(transformed_biflab[10, :])
 plt.subplot(212)
 plt.imshow(TermLabel)
 plt.show()
+

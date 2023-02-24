@@ -26,7 +26,7 @@ class_used = [0, 1, 2, 3, 4]
 data, label = get_data_label_alltogether(data_path, universal_path, class_used)
 print(data.shape, label.shape)
 
-data = np.reshape(data, (91, -1))
+data = np.reshape(data, (116, -1))
 scaler = MinMaxScaler()
 data_rescaled = scaler.fit_transform(data)
 
@@ -37,7 +37,7 @@ plt.rcParams["figure.figsize"] = (12,6)
 fig, ax = plt.subplots()
 xi = np.arange(1, 11, step=1)
 y = np.cumsum(pca.explained_variance_ratio_)
-y = average_array(y, 10)
+y = average_array(y, 12)
 
 plt.ylim(0.0,1.1)
 plt.plot(xi, y, marker='o', linestyle='--', color='b')

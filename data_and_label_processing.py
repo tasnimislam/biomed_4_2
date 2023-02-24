@@ -9,7 +9,7 @@ def read_xlx_file(xlx_file):
     bld_summary = pd.read_excel(xlx_file, sheet_name=0, header=0, names=None, index_col=None, usecols=None)
     bld_summary['Blood_group'] = pd.Categorical(bld_summary['Blood_group'])
     bld_summary['Blood_group'].replace(['A_pos', 'B_pos', 'O_pos', 'AB_pos', 'A_neg'],
-                        [0, 1, 2, 3, 4], inplace=True)
+                        [0, 0, 1, 0, 0], inplace=True)
     print(bld_summary['Blood_group'].value_counts())
     return bld_summary
 
@@ -18,7 +18,8 @@ def get_desired_image_label(index, xlx_data, universal_path):
     data = []
     for f in ['ri.bmp']: #, 'rt.bmp', 'lt.bmp', 'li.bmp']:
         data_path = universal_path + '/' + user_name + '/' + f
-        _, x = image_preprocessing_new(data_path)
+        # _, x = image_preprocessing_new(data_path)
+        x = image_preprocessing(data_path)
         data.append(x)
     #data = np.concatenate(data)
     data = np.squeeze(data)
@@ -32,8 +33,6 @@ def get_data_label_alltogether(xlx_file, universal_path, class_used):
     label = []
     for i in range(len(xlx_data)):
         x, y = get_desired_image_label(i, xlx_data, universal_path)
-        if not y in class_used:
-            continue
         data.append(x)
         label.append(y)
 

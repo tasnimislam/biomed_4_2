@@ -158,3 +158,20 @@ def image_preprocessing_new(path):
     TermLabel = skimage.measure.label(minutiaeTerm, connectivity=1);
 
     return BifLabel / 255.0, TermLabel / 255.0
+
+def image_preprocessing_final(path):
+    image = Image.open(path)
+    image = np.array(image)
+
+    # Preprocessing I have decided
+    ad_mean = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
+    _, otsu = cv2.threshold(ad_mean, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, bin_cann = cv2.threshold(otsu, 127, 255, cv2.THRESH_BINARY)
+    # colored = cv2.cvtColor(bin_cann,cv2.COLOR_GRAY2RGB)
+    colored = bin_cann
+    colored = colored[38:268,20:236]
+    # colored=fingerprint_enhancer.enhance_Fingerprint(colored)
+    # colored = cv2.cvtColor(bin_cann,cv2.COLOR_GRAY2RGB)
+    colored = cv2.cvtColor(colored,cv2.COLOR_GRAY2RGB)
+    resized_image = cv2.resize(colored, (256,256), interpolation=cv2.INTER_AREA)
+    return resized_image / 255.0
